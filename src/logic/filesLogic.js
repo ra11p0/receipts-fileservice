@@ -23,27 +23,12 @@ function processSaveFileRequest(fileType, host, file, response){
     fs.moveSync(filePath, newPath, function (err) {
         if (err) throw err
     })
-    var url = 'http://'.concat(host,'/api/cdn/',fileType,'/',mimeType,'/',fileName);
+    var url = 'http://'.concat(host,'/api/cdn/',fileType,'/',fileName);
     response.send({
         status: 'ok',
-        url: url
+        url: url,
+        guid: fileName
     });
-};
-
-async function processGetFileRequest(fileType, contentType, fileFormat, guid, size, response){
-    const pathToFile = process.cwd()+'/storage/'.concat(fileType, '/', contentType, '/', fileFormat, '/', guid, '.', fileFormat);
-    fs.access(pathToFile, fs.F_OK, async (err) => {
-        if (err) {
-          response.sendStatus(404);
-          return;
-        }
-      
-        if(contentType == 'image' && size != undefined){
-            await processResizing(size, pathToFile, response, fileFormat);
-            return;
-        }
-        response.sendFile(pathToFile);
-      });
 };
 
 async function processResizing(size, pathToFile, response){
@@ -59,6 +44,5 @@ async function processResizing(size, pathToFile, response){
 
 module.exports = {
     processSaveFileRequest: processSaveFileRequest,
-    processGetFileRequest: processGetFileRequest,
     processResizing: processResizing
 };
