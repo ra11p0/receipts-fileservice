@@ -14,17 +14,6 @@ router.get('/ping', (req, res, next)=>{
     res.sendStatus(200);
 });
 
-router.get('/cdn/:fileType/:contentType/:fileFormat/:guid', async (req, res, next)=>{
-    const url_parts = url.parse(req.url, true);
-    const query = url_parts.query;
-    const size = query.size;
-    const fileType = req.params.fileType;
-    const contentType = req.params.contentType;
-    const fileFormat = req.params.fileFormat;
-    const guid = req.params.guid;
-    await fileLogic.processGetFileRequest(fileType, contentType, fileFormat, guid, size, res);
-});
-
 router.get('/cdn/:fileType/:guid', async (req, res, next)=>{
     const url_parts = url.parse(req.url, true);
     const query = url_parts.query;

@@ -5,6 +5,13 @@ const fileTypes = {
             '.png'
         ]
     },
+    productImage:{
+        allowedFileFormats: [
+            '.jpg',
+            '.jpeg',
+            '.png'
+        ]
+    },
     document:{
         allowedFileFormats:[
             '.pdf'
