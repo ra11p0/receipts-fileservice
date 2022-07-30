@@ -41,10 +41,10 @@ router.get('/cdn/:fileType/:guid', async (req, res, next)=>{
 });
 
 //FILE UPLOAD
-router.post('/cdn/:fileType', upload.single('file'), (req, res, next)=>{
+router.post('/cdn/:fileType', upload.single('file'), async (req, res, next)=>{
     var file = req.file;
     var fileType = req.params.fileType;
-    fileLogic.processSaveFileRequest(fileType, req.headers.host, file, res);
+    await fileLogic.processSaveFileRequest(fileType, req.headers.host, file, res);
 });
 
 //TEST FRONT

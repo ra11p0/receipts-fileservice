@@ -1,11 +1,15 @@
 const fileTypes = {
     storeImage:{
+        isPhoto: true,
         allowedFileFormats: [
             '.jpg',
             '.png'
         ]
     },
     productImage:{
+        isPhoto: true,
+        quality: 80,
+        resize: 1000,
         allowedFileFormats: [
             '.jpg',
             '.jpeg',
@@ -13,6 +17,7 @@ const fileTypes = {
         ]
     },
     document:{
+        isPhoto: false,
         allowedFileFormats:[
             '.pdf'
         ]

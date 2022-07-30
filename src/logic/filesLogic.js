@@ -4,7 +4,7 @@ const sharp = require("sharp");
 const fileSizes = require('./fileSizes');
 const fileTypes = require('./fileTypes');
 
-function processSaveFileRequest(fileType, host, file, response){
+async function processSaveFileRequest(fileType, host, file, response){
     const fileName = file.filename;
     const filePath = file.path;
     const mimeType = file.mimetype;
@@ -18,11 +18,24 @@ function processSaveFileRequest(fileType, host, file, response){
         return;
     }
 
-
     var newPath = 'storage/'.concat(fileType,'/',mimeType,'/',fileName, fileExtension);
-    fs.moveSync(filePath, newPath, function (err) {
-        if (err) throw err
-    })
+
+    if(fileTypes[fileType].isPhoto){
+        await sharp(filePath)
+        .resize(fileTypes[fileType].resize)
+        .webp({quality: fileTypes[fileType].quality})
+        .toFile(newPath);
+        fs.removeSync(filePath, function (err) {
+            if (err) throw err
+        })
+    }
+    else{
+        fs.moveSync(filePath, newPath, function (err) {
+            if (err) throw err
+        })
+    }
+
+
     var url = 'http://'.concat(host,'/api/cdn/',fileType,'/',fileName);
     response.send({
         status: 'ok',
