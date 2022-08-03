@@ -2,11 +2,12 @@ const router = require('express').Router();
 const multer = require("multer");
 const path = require('path');
 const url = require('url');
-const fs = require('fs-extra');
+const receiptOcr = require('../../logic/receiptOcr');
 const tempStoragePath = 'tmp/uploads/';
 const fileLogic = require('../../logic/filesLogic');
 const fileTypes = require('../../logic/fileTypes');
 const glob = require('glob');
+const fs = require('fs-extra');
 // SET STORAGE
 const upload = multer({ dest: tempStoragePath});
 
@@ -38,6 +39,24 @@ router.get('/cdn/:fileType/:guid', async (req, res, next)=>{
         else res.sendFile(files[0]);
         
     });
+});
+//get filetype details
+router.get('/cdn/:fileType', async (req, res, next)=>{
+    const fileType = req.params.fileType;
+    const guid = req.params.guid;
+    if(!fileTypes[fileType]) {
+        res.sendStatus(400);
+        return;
+    }
+    res.send(fileTypes[fileType]);
+});
+
+//receipt ocr
+router.post('/ocr',upload.single('file'), async (req, res, next)=>{
+    console.log(req.file);
+    var result = await receiptOcr.processReceipt(req.file.path);
+    res.send(result);
+    fs.rm(req.file.path);
 });
 
 //FILE UPLOAD

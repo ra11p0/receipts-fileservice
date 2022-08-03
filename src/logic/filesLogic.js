@@ -19,7 +19,7 @@ async function processSaveFileRequest(fileType, host, file, response){
     }
 
     var newPath = 'storage/'.concat(fileType,'/',mimeType,'/',fileName, fileExtension);
-
+    fs.mkdirSync(path.dirname(newPath), { recursive: true });
     if(fileTypes[fileType].isPhoto){
         await sharp(filePath)
         .resize(fileTypes[fileType].resize)
